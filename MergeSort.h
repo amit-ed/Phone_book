@@ -1,7 +1,7 @@
-extern int MergeSort(int a);
-#include <stdio.h>
-#include <stdlib.h>
-#include "phonebook.c"
+#include "Contact.h"
+#include <stdbool.h>
+extern struct Contact;
+extern struct Contact_Node;
 
 /* function prototypes */
 struct Contact_Node* SortedMerge(struct Contact_Node* a, struct Contact_Node* b, bool (*cmp_func)(Contact* a, Contact* b));
@@ -13,7 +13,7 @@ bool compare_by_phone(Contact* a, Contact* b);
 bool compare_by_cphone(Contact* a, Contact* b);
 
 /* sorts the linked list by changing next pointers (not data) */
-Contact_Node* MergeSort(struct Contact_Node headRef, int compare_by)
+Contact_Node* MergeSort(struct Contact_Node headRef, char compare_by)
 {
     struct Contact_Node* head = *headRef;
     struct Contact_Node* a;
@@ -28,13 +28,20 @@ Contact_Node* MergeSort(struct Contact_Node headRef, int compare_by)
     FrontBackSplit(head, &a, &b);
 
     /* Recursively sort the sublists */
-    MergeSort(&a);
-    MergeSort(&b);
+    MergeSort(&a, compare_by);
+    MergeSort(&b, compare_by);
 
     /* answer = merge the two sorted lists together */
     switch (compare_by)
     {
-    case 1:
+    case '1': *headRef = SortedMerge(a, b, compare_by_fname);
+        break;
+    case '2': *headRef = SortedMerge(a, b, compare_by_lname);
+        break;
+    case '3': *headRef = SortedMerge(a, b, compare_by_phone);
+        break;
+    case '4': *headRef = SortedMerge(a, b, compare_by_cphone);
+        break;
 
     }
     *headRef = SortedMerge(a, b);
