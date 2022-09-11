@@ -1,14 +1,12 @@
-#include <termios.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include "MergeSort.h"
 #include "Contact.h"
 //------------------------------------------
 extern struct Contact;
 extern struct Contact_Node;
-extern Contact_Node* MergeSort(struct Contact_Node headRef, char compare_by);
+extern void MergeSort(struct Contact_Node** headRef, char compare_by);
 #define TOTAL_CONTACTS 5
 #define NAME_LEN 31
 #define PHONE_LEN 15
@@ -437,81 +435,8 @@ void sort(void)
 	printf("\t[5] |--> Main Menu\n");
 	printf("\n\t::Enter a number (1-5): ");
 	ch = getc(stdin);
-	//getc(stdin);
 	printf("\n--------------------------------------------------------------------------------");
-	head = MergeSort(head, ch);
-}
-//----------------------------------------------------------------------------------------
-void sortf(void)
-{
-	struct Contact B;
-	register int i, j;
-	for (i = last - 1; i > 0; i--)
-		for (j = 0; j < i; j++)
-			if (strcmp(A[j].fname, A[j + 1].fname) > 0) {
-				B = A[j];
-				A[j] = A[j + 1];
-				A[j + 1] = B;
-			}
-	printf("\nplease wait... .Contacts will be sorted by first names.");
-	list2();
-	printf("\n   ::Press any key to sort contact by another form... ");
-	getc(stdin);
-	sort();
-}
-//----------------------------------------------------------------------------------------
-void sortl(void)
-{
-	struct Contact B;
-	register int i, j;
-	for (i = last - 1; i > 0; i--)
-		for (j = 0; j < i; j++)
-			if (strcmp(A[j].lname, A[j + 1].lname) > 0) {
-				B = A[j];
-				A[j] = A[j + 1];
-				A[j + 1] = B;
-			}
-	printf("\nplease wait... .Contacts will be sorted by last names.");
-	list2();
-	printf("\n   ::Press any key to sort contact by another form... ");
-	getc(stdin);
-	sort();
-}
-//----------------------------------------------------------------------------------------
-void sortp(void)
-{
-	struct Contact B;
-	register int i, j;
-	for (i = last - 1; i > 0; i--)
-		for (j = 0; j < i; j++)
-			if (strcmp(A[j].telep, A[j + 1].telep) > 0) {
-				B = A[j];
-				A[j] = A[j + 1];
-				A[j + 1] = B;
-			}
-	printf("\nplease wait... .Contacts will be sorted by telephone numbers.");
-	list2();
-	printf("\n   ::Press any key to sort contact by another form... ");
-	getc(stdin);
-	sort();
-}
-//----------------------------------------------------------------------------------------
-void sortc(void)
-{
-	struct Contact B;
-	register int i, j;
-	for (i = last - 1; i > 0; i--)
-		for (j = 0; j < i; j++)
-			if (strcmp(A[j].cellp, A[j + 1].cellp) > 0) {
-				B = A[j];
-				A[j] = A[j + 1];
-				A[j + 1] = B;
-			}
-	printf("\nPlease wait... .Contacts will be sort by cellphone numbers.");
-	list2();
-	printf("\n   ::Press any key to sort contact by another form... ");
-	getc(stdin);
-	sort();
+	MergeSort(&head, ch);
 }
 //----------------------------------------------------------------------------------------
 void list()

@@ -1,19 +1,20 @@
 #include "Contact.h"
 #include <stdbool.h>
-extern struct Contact;
-extern struct Contact_Node;
 
 /* function prototypes */
-struct Contact_Node* SortedMerge(struct Contact_Node* a, struct Contact_Node* b, bool (*cmp_func)(Contact* a, Contact* b));
+void MergeSort(struct Contact_Node** headRef, char compare_by);
+struct Contact_Node* SortedMerge(struct Contact_Node* a, struct Contact_Node* b, bool (*cmp_func)(struct Contact* a, struct Contact* b));
 void FrontBackSplit(struct Contact_Node* source,
     struct Contact_Node** frontRef, struct Contact_Node** backRef);
-bool compare_by_fname(Contact* a, Contact* b);
-bool compare_by_lname(Contact* a, Contact* b);
-bool compare_by_phone(Contact* a, Contact* b);
-bool compare_by_cphone(Contact* a, Contact* b);
+void printList(struct Contact_Node* node);
+bool compare_by_fname(struct Contact* a, struct Contact* b);
+bool compare_by_lname(struct Contact* a, struct Contact* b);
+bool compare_by_phone(struct Contact* a, struct Contact* b);
+bool compare_by_cphone(struct Contact* a, struct Contact* b);
+
 
 /* sorts the linked list by changing next pointers (not data) */
-Contact_Node* MergeSort(struct Contact_Node headRef, char compare_by)
+void MergeSort(struct Contact_Node** headRef, char compare_by)
 {
     struct Contact_Node* head = *headRef;
     struct Contact_Node* a;
@@ -42,15 +43,10 @@ Contact_Node* MergeSort(struct Contact_Node headRef, char compare_by)
         break;
     case '4': *headRef = SortedMerge(a, b, compare_by_cphone);
         break;
-
     }
-    *headRef = SortedMerge(a, b);
-    return headRef;
 }
 
-/* See https:// www.geeksforgeeks.org/?p=3622 for details of this
-function */
-struct Contact_Node* SortedMerge(struct Contact_Node* a, struct Contact_Node* b, bool (*cmp_func)(Contact* a, Contact* b))
+struct Contact_Node* SortedMerge(struct Contact_Node* a, struct Contact_Node* b, bool (*cmp_func)(struct Contact* a, struct Contact* b))
 {
     struct Contact_Node* result = NULL;
 
@@ -63,11 +59,11 @@ struct Contact_Node* SortedMerge(struct Contact_Node* a, struct Contact_Node* b,
     /* Pick either a or b, and recur */
     if (cmp_func(a->data, b->data)) {
         result = a;
-        result->next = SortedMerge(a->next, b);
+        result->next = SortedMerge(a->next, b, cmp_func);
     }
     else {
         result = b;
-        result->next = SortedMerge(a, b->next);
+        result->next = SortedMerge(a, b->next, cmp_func);
     }
     return (result);
 }
@@ -105,66 +101,24 @@ void FrontBackSplit(struct Contact_Node* source,
 void printList(struct Contact_Node* node)
 {
     while (node != NULL) {
-        printf("%d ", node->data);
+        printf("%s\n ", node->data->fname);
         node = node->next;
     }
 }
 
-/* Function to insert a node at the beginning of the linked list */
-void push(struct Contact_Node** head_ref, int new_data)
-{
-    /* allocate node */
-    struct Contact_Node* new_node = (struct Contact_Node*)malloc(sizeof(struct Contact_Node));
-
-    /* put in the data */
-    new_node->data = new_data;
-
-    /* link the old list off the new node */
-    new_node->next = (*head_ref);
-
-    /* move the head to point to the new node */
-    (*head_ref) = new_node;
-}
-
-/* Driver program to test above functions*/
-int main()
-{
-    /* Start with the empty list */
-    struct Contact_Node* res = NULL;
-    struct Contact_Node* a = NULL;
-
-    /* Let us create a unsorted linked lists to test the functions
-Created lists shall be a: 2->3->20->5->10->15 */
-    push(&a, 15);
-    push(&a, 10);
-    push(&a, 5);
-    push(&a, 20);
-    push(&a, 3);
-    push(&a, 2);
-
-    /* Sort the above created Linked List */
-    MergeSort(&a);
-
-    printf("Sorted Linked List is: \n");
-    printList(a);
-
-    getchar();
-    return 0;
-}
-
-bool compare_by_fname(Contact* a, Contact* b)
+bool compare_by_fname(struct Contact* a, struct Contact* b)
 {
     return strcmp(a->fname, b->fname) > 0;
 }
-bool compare_by_lname(Contact* a, Contact* b)
+bool compare_by_lname(struct Contact* a, struct Contact* b)
 {
     return strcmp(a->fname, b->fname) > 0;
 }
-bool compare_by_phone(Contact* a, Contact* b)
+bool compare_by_phone(struct Contact* a, struct Contact* b)
 {
     return strcmp(a->fname, b->fname) > 0;
 }
-bool compare_by_cphone(Contact* a, Contact* b)
+bool compare_by_cphone(struct Contact* a, struct Contact* b)
 {
     return strcmp(a->fname, b->fname) > 0;
 }
